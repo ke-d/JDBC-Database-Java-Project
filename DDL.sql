@@ -34,8 +34,6 @@ CONSTRAINT Book_pk
 PRIMARY KEY (GroupName, BookTitle)
 );
 
-DROP TABLE Publisher;
-DROP TABLE Book;
 
 INSERT INTO WritingGroup
 (GroupName, HeadWriter, YearFormed, Subject)
