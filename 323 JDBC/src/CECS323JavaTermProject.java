@@ -1,7 +1,10 @@
 //package cecs.pkg323.java.term.project;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -12,13 +15,6 @@ public class CECS323JavaTermProject {
     static String USER;
     static String PASS;
     static String DBNAME;
-    //This is the specification for the printout that I'm doing:
-    //each % denotes the start of a new field.
-    //The - denotes left justification.
-    //The number indicates how wide to make the field.
-    //The "s" denotes that it's a string.  All of our output in this test are 
-    //strings, but that won't always be the case.
-    static final String displayFormat="%-5s%-15s%-15s%-15s\n";
 // JDBC driver name and database URL
     static final String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
     static String DB_URL = "jdbc:derby://localhost:1527/";
@@ -37,25 +33,49 @@ public class CECS323JavaTermProject {
     }
     
     public static void main(String[] args) {
-        //Prompt the user for the database name, and the credentials.
-        //If your database has no credentials, you can update this code to 
-        //remove that from the connection string.
+       
         Scanner in = new Scanner(System.in);
-//        System.out.print("Name of the database (not the user account): ");
-//        DBNAME = in.nextLine();
-//        System.out.print("Database user name: ");
-//        USER = in.nextLine();
-//        System.out.print("Database password: ");
-//        PASS = in.nextLine();
-
-        DBNAME = "ProjectDB";
-        USER = "cecs";
-        PASS = "cecs";
+        Statement stmt = null;
+        databaseInput(in);
+        Connection conn = connectToDB();
+        String sel = displayOptions(in);
+        displayResultSet(executeStatement(createStatement(sel), conn, stmt));
         
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
+    
+    public static void databaseInput(Scanner input) {
+        System.out.print("Name of the database (not the user account): ");
+        DBNAME = input.nextLine();
+        System.out.print("Database user name: ");
+        USER = input.nextLine();
+        System.out.print("Database password: ");
+        PASS = input.nextLine();
+    }
+    
+    public static String displayOptions(Scanner input) {
+        System.out.println("1. List all writing groups.");
+        System.out.println("2. User Input - to be built");
+        System.out.println("3. List all publishers.");
+        System.out.println("4. User Iput - To be built");
+        System.out.println("5. List all books.");
+        
+        String select = input.nextLine();
+        return select;
+       
+    }
+    
+    public static Connection connectToDB() {
+        Connection conn = null;
         //Constructing the database URL connection string
         DB_URL = DB_URL + DBNAME + ";user="+ USER + ";password=" + PASS;
-        Connection conn = null; //initialize the connection
+        
         Statement stmt = null;  //initialize the statement that we're using
+        
         try {
             //STEP 2: Register JDBC driver
             Class.forName("org.apache.derby.jdbc.ClientDriver");
@@ -63,54 +83,78 @@ public class CECS323JavaTermProject {
             //STEP 3: Open a connection
             System.out.println("Connecting to database...");
             conn = DriverManager.getConnection(DB_URL);
-
-            //STEP 4: Execute a query
-            System.out.println("Creating statement...");
-            stmt = conn.createStatement();
-            String sql;
-            sql = "SELECT PublisherName, PublisherAddress, PublisherPhone, PublisherEmail FROM Publisher";
-            ResultSet rs = stmt.executeQuery(sql);
-
-            //STEP 5: Extract data from result set
-            System.out.printf(displayFormat, "ID", "First Name", "Last Name", "Phone #");
-            while (rs.next()) {
-                //Retrieve by column name
-                String id = rs.getString("PublisherName");
-                String phone = rs.getString("PublisherAddress");
-                String first = rs.getString("PublisherPhone");
-                String last = rs.getString("PublisherEmail");
-
-                //Display values
-                System.out.printf(displayFormat, 
-                        dispNull(id), dispNull(first), dispNull(last), dispNull(phone));
-            }
-            //STEP 6: Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
+            
+            System.out.println("Succesfully connected to DB!");
         } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
         } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    stmt.close();
+        } 
+         
+        return conn;
+    }
+    
+    public static String createStatement(String select) {
+       String stmt = null;
+        switch(select) {
+           case "1":
+               stmt = "SELECT * FROM WritingGroup";
+               break;
+           case "2":
+               break;
+           case "3":
+               stmt = "SELECT * FROM Publisher";
+               break;
+           case "4":
+               break;
+           case "5":
+               stmt = "SELECT * FROM Book";
+               break;
+               
+       }
+        return stmt;
+    }
+    
+    public static ResultSet executeStatement(String instr, Connection conn, Statement stmt) {
+        ResultSet returnRS = null;
+        try {
+            stmt = conn.createStatement();
+            returnRS = stmt.executeQuery(instr);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return returnRS;
+    }
+    
+    public static void displayResultSet(ResultSet result) {
+        ResultSetMetaData data = null;
+        try {
+            data = result.getMetaData();
+            ArrayList<String> colNames = new ArrayList<>();
+            
+            //get column names
+            for (int i = 1; i <= data.getColumnCount(); i++) {
+                colNames.add(data.getColumnName(i));
+                System.out.printf("%-50s", colNames.get(i-1));
+            }
+            
+            System.out.println();
+            
+            //display columns
+            while (result.next()) {
+                for (int i = 0; i < colNames.size(); i++) {
+                    System.out.printf("%-50s", result.getString(colNames.get(i)));
                 }
-            } catch (SQLException se2) {
-            }// nothing we can do
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }//end finally try
-        }//end try
-        System.out.println("Goodbye!");
-    }//end main
-}//end FirstExample}
+                System.out.println();
+             }
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+}
+
+
 
