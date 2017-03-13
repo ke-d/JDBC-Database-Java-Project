@@ -61,7 +61,7 @@ public class CECS323JavaTermProject {
         System.out.println("1. List all writing groups.");
         System.out.println("2. User Input - to be built");
         System.out.println("3. List all publishers.");
-        System.out.println("4. User Iput - To be built");
+        System.out.println("4. User Input - To be built");
         System.out.println("5. List all books.");
         
         String select = input.nextLine();
@@ -112,7 +112,9 @@ public class CECS323JavaTermProject {
            case "5":
                stmt = "SELECT * FROM Book";
                break;
-               
+           default:
+				System.out.println("Invalid Input");
+				break;
        }
         return stmt;
     }
