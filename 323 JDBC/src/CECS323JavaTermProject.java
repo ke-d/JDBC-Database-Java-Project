@@ -141,20 +141,18 @@ public class CECS323JavaTermProject {
             //get column names
             for (int i = 1; i <= data.getColumnCount(); i++) {
                 colNames.add(data.getColumnName(i));
+                System.out.println(data.getColumnName(i) + ": " +  data.getColumnDisplaySize(i));
                 if (data.getColumnDisplaySize(i)>maxSize) {
                     maxSize = data.getColumnDisplaySize(i);
+                    System.out.println(maxSize);
                 }
             }
-            maxSize+=5;
             
             String displayFormat = "%-" + maxSize + "s";
-            
+          
             for (int i = 0; i<colNames.size(); i++) {
-                System.out.printf(displayFormat, colNames.get(i-1));
+                System.out.printf(displayFormat, colNames.get(i));
             }
-            
-            System.out.println();
-            
             //display columns
             while (result.next()) {
                 for (int i = 0; i < colNames.size(); i++) {
