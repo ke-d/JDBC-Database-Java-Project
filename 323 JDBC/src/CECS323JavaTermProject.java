@@ -39,13 +39,75 @@ public class CECS323JavaTermProject {
         databaseInput(in);
         Connection conn = connectToDB();
         String sel = displayOptions(in);
-        displayResultSet(executeStatement(createStatement(sel), conn, stmt));
+        switch(sel) {
+            case "1":
+            case "3":
+            case "5":
+                displayResultSet(executeStatement(createStatement(sel), conn, stmt));
+                break;
+            case "6":
+                prepareStatementForBookInsert(in, conn, createStatement(sel));
+                break;
+            case "7":
+                prepareStatementForBookRemove(in, conn, createStatement(sel));
+                break;
+        }
         
         try {
             conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }        
+    }
+    
+    public static void prepareStatementForBookInsert(Scanner input, Connection conn, String stmt) {
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement(stmt);
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Enter the Group Name: ");
+        String groupName = input.nextLine();
+        System.out.println("Enter the Book Title: ");
+        String bookTitle = input.nextLine();
+        System.out.println("Enter the Publisher Name: ");
+        String publisherName = input.nextLine();
+        System.out.println("Enter the Year Published: ");
+        String yearPublished = input.nextLine();
+        System.out.println("Enter the Number of Pages: ");
+        int numberPages = input.nextInt();
+            
+        try {
+            pstmt.setString(1, groupName);
+            pstmt.setString(2, bookTitle);
+            pstmt.setString(3, publisherName);
+            pstmt.setString(4, yearPublished);
+            pstmt.setInt(5, numberPages);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+        public static void prepareStatementForBookRemove(Scanner input, Connection conn, String stmt) {
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement(stmt);
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Enter the Book Title: ");
+        String bookTitle = input.nextLine();
+            
+        try {
+            pstmt.setString(1, bookTitle);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
     public static void databaseInput(Scanner input) {
@@ -59,10 +121,12 @@ public class CECS323JavaTermProject {
     
     public static String displayOptions(Scanner input) {
         System.out.println("1. List all writing groups.");
-        System.out.println("2. User Input - to be built");
+        System.out.println("2. User Input - To be built");
         System.out.println("3. List all publishers.");
         System.out.println("4. User Input - To be built");
         System.out.println("5. List all books.");
+        System.out.println("6. Insert a Book.");
+        System.out.println("7. Remove a Book.");
         
         String select = input.nextLine();
         return select;
@@ -112,12 +176,19 @@ public class CECS323JavaTermProject {
            case "5":
                stmt = "SELECT * FROM Book";
                break;
+           case "6":
+                stmt = "INSERT INTO BOOK (GroupName, BookTitle, PublisherName, YearPublished, NumberPages) Values(?,?,?,?,?)";
+                break;
+            case "7":
+                stmt = "DELETE FROM BOOK WHERE BookTitle = ?";
+                break;
            default:
-				System.out.println("Invalid Input");
-				break;
+               System.out.println("Invalid Input");
+               break;
        }
         return stmt;
     }
+    
     
     public static ResultSet executeStatement(String instr, Connection conn, Statement stmt) {
         ResultSet returnRS = null;
