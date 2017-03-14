@@ -48,6 +48,9 @@ public class CECS323JavaTermProject {
             case "6":
                 prepareStatementForBookInsert(in, conn, createStatement(sel));
                 break;
+            case "7":
+                prepareStatementForBookRemove(in, conn, createStatement(sel));
+                break;
         }
         
         try {
@@ -88,6 +91,25 @@ public class CECS323JavaTermProject {
         
     }
     
+        public static void prepareStatementForBookRemove(Scanner input, Connection conn, String stmt) {
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement(stmt);
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Enter the Book Title: ");
+        String bookTitle = input.nextLine();
+            
+        try {
+            pstmt.setString(1, bookTitle);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
     public static void databaseInput(Scanner input) {
         System.out.print("Name of the database (not the user account): ");
         DBNAME = input.nextLine();
@@ -104,6 +126,7 @@ public class CECS323JavaTermProject {
         System.out.println("4. User Input - To be built");
         System.out.println("5. List all books.");
         System.out.println("6. Insert a Book.");
+        System.out.println("7. Remove a Book.");
         
         String select = input.nextLine();
         return select;
@@ -155,6 +178,9 @@ public class CECS323JavaTermProject {
                break;
            case "6":
                 stmt = "INSERT INTO BOOK (GroupName, BookTitle, PublisherName, YearPublished, NumberPages) Values(?,?,?,?,?)";
+                break;
+            case "7":
+                stmt = "DELETE FROM BOOK WHERE BookTitle = ?";
                 break;
            default:
                System.out.println("Invalid Input");
