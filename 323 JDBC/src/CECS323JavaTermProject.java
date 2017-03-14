@@ -106,7 +106,7 @@ public class CECS323JavaTermProject {
                stmt = "SELECT * FROM WritingGroup";
                break;
            case "2":
-               stmt = "SELECT * FROM Book WHERE GroupName = ?";
+               stmt = "SELECT * FROM WritingGroup WHERE GroupName = ?";
                fetchUserSelection("group");
                break;
            case "3":
@@ -133,10 +133,8 @@ public class CECS323JavaTermProject {
             
             //if we are not using a prepared statement, just pass in a null value for the bind variable
             if (null != BINDVARIABLE) {
-                
                 PreparedStatement pstmt = conn.prepareStatement(instr);
                 pstmt.setString(1, BINDVARIABLE);
-                System.out.println(pstmt);
                 returnRS = pstmt.executeQuery();
             } else {
                 Statement stmt = conn.createStatement();
@@ -169,6 +167,7 @@ public class CECS323JavaTermProject {
             for (int i = 0; i<colNames.size(); i++) {
                 System.out.printf(displayFormat, colNames.get(i));
             }
+            System.out.println();
             //display columns
             while (result.next()) {
                 for (int i = 0; i < colNames.size(); i++) {
