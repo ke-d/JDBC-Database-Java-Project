@@ -15,6 +15,8 @@ public class CECS323JavaTermProject {
     static String USER;
     static String PASS;
     static String DBNAME;
+    static String BINDVARIABLE;
+    static Scanner INPUT = new Scanner(System.in);
 // JDBC driver name and database URL
     static final String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
     static String DB_URL = "jdbc:derby://localhost:1527/";
@@ -34,12 +36,13 @@ public class CECS323JavaTermProject {
     
     public static void main(String[] args) {
        
-        Scanner in = new Scanner(System.in);
+        
         Statement stmt = null;
-        databaseInput(in);
+        databaseInput();
         Connection conn = connectToDB();
-        String sel = displayOptions(in);
-        displayResultSet(executeStatement(createStatement(sel), conn, stmt));
+        String sel = displayOptions();
+        displayResultSet(executeStatement(createStatement(sel), conn));
+        
         
         try {
             conn.close();
@@ -48,23 +51,22 @@ public class CECS323JavaTermProject {
         }        
     }
     
-    public static void databaseInput(Scanner input) {
+    public static void databaseInput() {
         System.out.print("Name of the database (not the user account): ");
-        DBNAME = input.nextLine();
+        DBNAME = INPUT.nextLine();
         System.out.print("Database user name: ");
-        USER = input.nextLine();
+        USER = INPUT.nextLine();
         System.out.print("Database password: ");
-        PASS = input.nextLine();
+        PASS = INPUT.nextLine();
     }
     
-    public static String displayOptions(Scanner input) {
+    public static String displayOptions() {
         System.out.println("1. List all writing groups.");
         System.out.println("2. User Input - to be built");
         System.out.println("3. List all publishers.");
         System.out.println("4. User Input - To be built");
         System.out.println("5. List all books.");
-        
-        String select = input.nextLine();
+        String select = INPUT.nextLine();
         return select;
        
     }
@@ -100,16 +102,22 @@ public class CECS323JavaTermProject {
        String stmt = null;
         switch(select) {
            case "1":
+               BINDVARIABLE = null;
                stmt = "SELECT * FROM WritingGroup";
                break;
            case "2":
+               stmt = "SELECT * FROM Book WHERE GroupName = ?";
+               fetchUserSelection("group");
                break;
            case "3":
+               BINDVARIABLE = null;
                stmt = "SELECT * FROM Publisher";
                break;
            case "4":
+               stmt = "SELECT * FROM ?";
                break;
            case "5":
+               BINDVARIABLE = null;
                stmt = "SELECT * FROM Book";
                break;
            default:
@@ -119,11 +127,21 @@ public class CECS323JavaTermProject {
         return stmt;
     }
     
-    public static ResultSet executeStatement(String instr, Connection conn, Statement stmt) {
+    public static ResultSet executeStatement(String instr, Connection conn) {
         ResultSet returnRS = null;
         try {
-            stmt = conn.createStatement();
-            returnRS = stmt.executeQuery(instr);
+            
+            //if we are not using a prepared statement, just pass in a null value for the bind variable
+            if (null != BINDVARIABLE) {
+                
+                PreparedStatement pstmt = conn.prepareStatement(instr);
+                pstmt.setString(1, BINDVARIABLE);
+                System.out.println(pstmt);
+                returnRS = pstmt.executeQuery();
+            } else {
+                Statement stmt = conn.createStatement();
+                returnRS = stmt.executeQuery(instr);
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -141,10 +159,8 @@ public class CECS323JavaTermProject {
             //get column names
             for (int i = 1; i <= data.getColumnCount(); i++) {
                 colNames.add(data.getColumnName(i));
-                System.out.println(data.getColumnName(i) + ": " +  data.getColumnDisplaySize(i));
                 if (data.getColumnDisplaySize(i)>maxSize) {
-                    maxSize = data.getColumnDisplaySize(i);
-                    System.out.println(maxSize);
+                    maxSize = data.getColumnDisplaySize(i);  
                 }
             }
             
@@ -164,6 +180,11 @@ public class CECS323JavaTermProject {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+    }
+    
+    public static void fetchUserSelection(String obj) {
+        System.out.println("Please enter the name of the " + obj + ": ");
+        BINDVARIABLE = INPUT.nextLine();
     }
 }
 
