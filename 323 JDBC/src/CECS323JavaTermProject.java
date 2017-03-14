@@ -136,10 +136,21 @@ public class CECS323JavaTermProject {
             data = result.getMetaData();
             ArrayList<String> colNames = new ArrayList<>();
             
+            //get default col size
+            int maxSize = data.getColumnDisplaySize(1);
             //get column names
             for (int i = 1; i <= data.getColumnCount(); i++) {
                 colNames.add(data.getColumnName(i));
-                System.out.printf("%-50s", colNames.get(i-1));
+                if (data.getColumnDisplaySize(i)>maxSize) {
+                    maxSize = data.getColumnDisplaySize(i);
+                }
+            }
+            maxSize+=5;
+            
+            String displayFormat = "%-" + maxSize + "s";
+            
+            for (int i = 0; i<colNames.size(); i++) {
+                System.out.printf(displayFormat, colNames.get(i-1));
             }
             
             System.out.println();
@@ -147,7 +158,7 @@ public class CECS323JavaTermProject {
             //display columns
             while (result.next()) {
                 for (int i = 0; i < colNames.size(); i++) {
-                    System.out.printf("%-50s", result.getString(colNames.get(i)));
+                    System.out.printf(displayFormat, result.getString(colNames.get(i)));
                 }
                 System.out.println();
              }
