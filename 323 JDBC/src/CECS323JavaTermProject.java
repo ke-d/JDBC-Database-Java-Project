@@ -38,26 +38,26 @@ public class CECS323JavaTermProject {
         databaseInput();
         Connection conn = connectToDB();
         String sel = displayOptions();
-        String bindVar = null;
-        switch(sel) {
-            case "2":
-                
-            case "4":
-                
-            case "5":
-                displayResultSet(executeStatement(createStatement(sel), conn));
-                break;
-            case "6":
-                prepareStatementForBookInsert(conn, createStatement(sel));
-                break;
-            case "7":
-                prepareStatementForBookRemove(conn, createStatement(sel));
-                break;
+        while(sel != "8") {
+            String bindVar = null;
+            switch(sel) {
+                case "2":
+
+                case "4":
+
+                case "5":
+                    displayResultSet(executeStatement(createStatement(sel), conn));
+                    break;
+                case "6":
+                    prepareStatementForBookInsert(conn, createStatement(sel));
+                    break;
+                case "7":
+                    prepareStatementForBookRemove(conn, createStatement(sel));
+                    break;
+            }
+
+            sel = displayOptions();
         }
-        
-        
-        displayResultSet(executeStatement(createStatement(sel), conn));
-        
         
         try {
             conn.close();
