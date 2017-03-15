@@ -15,6 +15,8 @@ public class CECS323JavaTermProject {
     static String USER;
     static String PASS;
     static String DBNAME;
+    static String BINDVARIABLE;
+    static Scanner INPUT = new Scanner(System.in);
 // JDBC driver name and database URL
     static final String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
     static String DB_URL = "jdbc:derby://localhost:1527/";
@@ -33,25 +35,29 @@ public class CECS323JavaTermProject {
     }
     
     public static void main(String[] args) {
-       
-        Scanner in = new Scanner(System.in);
-        Statement stmt = null;
-        databaseInput(in);
+        databaseInput();
         Connection conn = connectToDB();
-        String sel = displayOptions(in);
+        String sel = displayOptions();
+        String bindVar = null;
         switch(sel) {
-            case "1":
-            case "3":
+            case "2":
+                
+            case "4":
+                
             case "5":
-                displayResultSet(executeStatement(createStatement(sel), conn, stmt));
+                displayResultSet(executeStatement(createStatement(sel), conn));
                 break;
             case "6":
-                prepareStatementForBookInsert(in, conn, createStatement(sel));
+                prepareStatementForBookInsert(conn, createStatement(sel));
                 break;
             case "7":
-                prepareStatementForBookRemove(in, conn, createStatement(sel));
+                prepareStatementForBookRemove(conn, createStatement(sel));
                 break;
         }
+        
+        
+        displayResultSet(executeStatement(createStatement(sel), conn));
+        
         
         try {
             conn.close();
@@ -60,7 +66,7 @@ public class CECS323JavaTermProject {
         }        
     }
     
-    public static void prepareStatementForBookInsert(Scanner input, Connection conn, String stmt) {
+    public static void prepareStatementForBookInsert(Connection conn, String stmt) {
         PreparedStatement pstmt = null;
         try {
             pstmt = conn.prepareStatement(stmt);
@@ -68,15 +74,15 @@ public class CECS323JavaTermProject {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("Enter the Group Name: ");
-        String groupName = input.nextLine();
+        String groupName = INPUT.nextLine();
         System.out.println("Enter the Book Title: ");
-        String bookTitle = input.nextLine();
+        String bookTitle = INPUT.nextLine();
         System.out.println("Enter the Publisher Name: ");
-        String publisherName = input.nextLine();
+        String publisherName = INPUT.nextLine();
         System.out.println("Enter the Year Published: ");
-        String yearPublished = input.nextLine();
+        String yearPublished = INPUT.nextLine();
         System.out.println("Enter the Number of Pages: ");
-        int numberPages = input.nextInt();
+        int numberPages = INPUT.nextInt();
             
         try {
             pstmt.setString(1, groupName);
@@ -91,7 +97,7 @@ public class CECS323JavaTermProject {
         
     }
     
-        public static void prepareStatementForBookRemove(Scanner input, Connection conn, String stmt) {
+        public static void prepareStatementForBookRemove(Connection conn, String stmt) {
         PreparedStatement pstmt = null;
         try {
             pstmt = conn.prepareStatement(stmt);
@@ -99,7 +105,7 @@ public class CECS323JavaTermProject {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("Enter the Book Title: ");
-        String bookTitle = input.nextLine();
+        String bookTitle = INPUT.nextLine();
             
         try {
             pstmt.setString(1, bookTitle);
@@ -110,16 +116,18 @@ public class CECS323JavaTermProject {
         
     }
     
-    public static void databaseInput(Scanner input) {
+
+    public static void databaseInput() {
+
         System.out.print("Name of the database (not the user account): ");
-        DBNAME = input.nextLine();
+        DBNAME = INPUT.nextLine();
         System.out.print("Database user name: ");
-        USER = input.nextLine();
+        USER = INPUT.nextLine();
         System.out.print("Database password: ");
-        PASS = input.nextLine();
+        PASS = INPUT.nextLine();
     }
     
-    public static String displayOptions(Scanner input) {
+    public static String displayOptions() {
         System.out.println("1. List all writing groups.");
         System.out.println("2. User Input - To be built");
         System.out.println("3. List all publishers.");
@@ -127,8 +135,9 @@ public class CECS323JavaTermProject {
         System.out.println("5. List all books.");
         System.out.println("6. Insert a Book.");
         System.out.println("7. Remove a Book.");
-        
-        String select = input.nextLine();
+
+        String select = INPUT.nextLine();
+
         return select;
        
     }
@@ -167,11 +176,13 @@ public class CECS323JavaTermProject {
                stmt = "SELECT * FROM WritingGroup";
                break;
            case "2":
+               stmt = "SELECT * FROM WritingGroup WHERE GroupName = ?";
                break;
            case "3":
                stmt = "SELECT * FROM Publisher";
                break;
            case "4":
+               stmt = "SELECT * FROM ?";
                break;
            case "5":
                stmt = "SELECT * FROM Book";
@@ -188,13 +199,15 @@ public class CECS323JavaTermProject {
        }
         return stmt;
     }
-    
-    
-    public static ResultSet executeStatement(String instr, Connection conn, Statement stmt) {
+
+    public static ResultSet executeStatement(String instr, Connection conn) {
+
         ResultSet returnRS = null;
         try {
-            stmt = conn.createStatement();
-            returnRS = stmt.executeQuery(instr);
+            
+        
+                Statement stmt = conn.createStatement();
+                returnRS = stmt.executeQuery(instr);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -212,10 +225,8 @@ public class CECS323JavaTermProject {
             //get column names
             for (int i = 1; i <= data.getColumnCount(); i++) {
                 colNames.add(data.getColumnName(i));
-                System.out.println(data.getColumnName(i) + ": " +  data.getColumnDisplaySize(i));
                 if (data.getColumnDisplaySize(i)>maxSize) {
-                    maxSize = data.getColumnDisplaySize(i);
-                    System.out.println(maxSize);
+                    maxSize = data.getColumnDisplaySize(i);  
                 }
             }
             
@@ -224,6 +235,7 @@ public class CECS323JavaTermProject {
             for (int i = 0; i<colNames.size(); i++) {
                 System.out.printf(displayFormat, colNames.get(i));
             }
+            System.out.println();
             //display columns
             while (result.next()) {
                 for (int i = 0; i < colNames.size(); i++) {
@@ -236,7 +248,15 @@ public class CECS323JavaTermProject {
         }
         
     }
+    
+    public static String fetchUserSelection(String obj) {
+        System.out.println("Please enter the name of the " + obj + ": ");
+        String bindvar = INPUT.nextLine();
+        return bindvar;
+    }
 }
+    
+
 
 
 
