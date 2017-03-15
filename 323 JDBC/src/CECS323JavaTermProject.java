@@ -41,10 +41,18 @@ public class CECS323JavaTermProject {
         while(sel != "8") {
             String bindVar = null;
             switch(sel) {
+                case "1":
+                    displayResultSet(executeStatement(createStatement(sel), conn));
+                    break;
                 case "2":
-
+                    displayResultSet(executePreparedStatement(conn, createStatement(sel), getGroupInfo()));
+                    break;
+                case "3":
+                    displayResultSet(executeStatement(createStatement(sel), conn));
+                    break;
                 case "4":
-
+                    displayResultSet(executePreparedStatement(conn, createStatement(sel), getBookInfo()));
+                    break;
                 case "5":
                     displayResultSet(executeStatement(createStatement(sel), conn));
                     break;
@@ -55,8 +63,9 @@ public class CECS323JavaTermProject {
                     prepareStatementForBookRemove(conn, createStatement(sel));
                     break;
             }
-
+            
             sel = displayOptions();
+        
         }
         
         try {
@@ -65,58 +74,8 @@ public class CECS323JavaTermProject {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }
+ 
     
-    public static void prepareStatementForBookInsert(Connection conn, String stmt) {
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = conn.prepareStatement(stmt);
-        } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("Enter the Group Name: ");
-        String groupName = INPUT.nextLine();
-        System.out.println("Enter the Book Title: ");
-        String bookTitle = INPUT.nextLine();
-        System.out.println("Enter the Publisher Name: ");
-        String publisherName = INPUT.nextLine();
-        System.out.println("Enter the Year Published: ");
-        String yearPublished = INPUT.nextLine();
-        System.out.println("Enter the Number of Pages: ");
-        int numberPages = INPUT.nextInt();
-            
-        try {
-            pstmt.setString(1, groupName);
-            pstmt.setString(2, bookTitle);
-            pstmt.setString(3, publisherName);
-            pstmt.setString(4, yearPublished);
-            pstmt.setInt(5, numberPages);
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    
-        public static void prepareStatementForBookRemove(Connection conn, String stmt) {
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = conn.prepareStatement(stmt);
-        } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("Enter the Book Title: ");
-        String bookTitle = INPUT.nextLine();
-            
-        try {
-            pstmt.setString(1, bookTitle);
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    
-
     public static void databaseInput() {
 
         System.out.print("Name of the database (not the user account): ");
@@ -129,9 +88,9 @@ public class CECS323JavaTermProject {
     
     public static String displayOptions() {
         System.out.println("1. List all writing groups.");
-        System.out.println("2. User Input - To be built");
+        System.out.println("2. List all information from a specific writing group.");
         System.out.println("3. List all publishers.");
-        System.out.println("4. User Input - To be built");
+        System.out.println("4. List all information from a specific book.");
         System.out.println("5. List all books.");
         System.out.println("6. Insert a Book.");
         System.out.println("7. Remove a Book.");
@@ -182,7 +141,7 @@ public class CECS323JavaTermProject {
                stmt = "SELECT * FROM Publisher";
                break;
            case "4":
-               stmt = "SELECT * FROM ?";
+               stmt = "SELECT * FROM Book WHERE BookTitle = ?";
                break;
            case "5":
                stmt = "SELECT * FROM Book";
@@ -199,15 +158,90 @@ public class CECS323JavaTermProject {
        }
         return stmt;
     }
-
+    
+       
+    public static void prepareStatementForBookInsert(Connection conn, String stmt) {
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement(stmt);
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Enter the Group Name: ");
+        String groupName = INPUT.nextLine();
+        System.out.println("Enter the Book Title: ");
+        String bookTitle = INPUT.nextLine();
+        System.out.println("Enter the Publisher Name: ");
+        String publisherName = INPUT.nextLine();
+        System.out.println("Enter the Year Published: ");
+        String yearPublished = INPUT.nextLine();
+        System.out.println("Enter the Number of Pages: ");
+        int numberPages = INPUT.nextInt();
+            
+        try {
+            pstmt.setString(1, groupName);
+            pstmt.setString(2, bookTitle);
+            pstmt.setString(3, publisherName);
+            pstmt.setString(4, yearPublished);
+            pstmt.setInt(5, numberPages);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+        public static void prepareStatementForBookRemove(Connection conn, String stmt) {
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement(stmt);
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Enter the Book Title: ");
+        String bookTitle = INPUT.nextLine();
+            
+        try {
+            pstmt.setString(1, bookTitle);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+        
+    public static String getGroupInfo () {
+        System.out.println("Please enter the group name: ");
+        String name = INPUT.nextLine();
+        return name;      
+    }
+    
+    public static String getBookInfo() {
+        System.out.println("Please enter the book name: ");
+        String name = INPUT.nextLine();
+        return name;
+    }
+    
+    public static ResultSet executePreparedStatement(Connection conn, String stmt, String bindVar) {
+        ResultSet returnSet = null;
+        PreparedStatement pstmt = null;
+        try {
+            System.out.println(stmt);
+            System.out.println(bindVar);
+            pstmt = conn.prepareStatement(stmt);
+            pstmt.setString(1, bindVar);
+            returnSet = pstmt.executeQuery();
+        } catch (SQLException ex) {
+             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return returnSet;
+    }
     public static ResultSet executeStatement(String instr, Connection conn) {
 
         ResultSet returnRS = null;
         try {
-            
-        
-                Statement stmt = conn.createStatement();
-                returnRS = stmt.executeQuery(instr);
+            Statement stmt = conn.createStatement();
+            returnRS = stmt.executeQuery(instr);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -246,7 +280,7 @@ public class CECS323JavaTermProject {
         } catch (SQLException ex) {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
     
     public static String fetchUserSelection(String obj) {
