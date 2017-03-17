@@ -37,8 +37,7 @@ public class CECS323JavaTermProject {
         databaseInput();
         Connection conn = connectToDB();
         String sel = displayOptions();
-        while(sel != "9") {
-            String bindVar = null;
+        while(!sel.equals("9")) {
             switch(sel) {
                 case "1":
                     displayResultSet(executeStatement(createStatement(sel), conn));
