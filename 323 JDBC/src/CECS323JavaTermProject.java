@@ -15,7 +15,6 @@ public class CECS323JavaTermProject {
     static String USER;
     static String PASS;
     static String DBNAME;
-    static String BINDVARIABLE;
     static Scanner INPUT = new Scanner(System.in);
 // JDBC driver name and database URL
     static final String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
@@ -38,7 +37,7 @@ public class CECS323JavaTermProject {
         databaseInput();
         Connection conn = connectToDB();
         String sel = displayOptions();
-        while(sel != "8") {
+        while(sel != "9") {
             String bindVar = null;
             switch(sel) {
                 case "1":
@@ -62,6 +61,8 @@ public class CECS323JavaTermProject {
                 case "7":
                     prepareStatementForBookRemove(conn, createStatement(sel));
                     break;
+                case "8":
+                    
             }
             
             sel = displayOptions();
@@ -72,7 +73,8 @@ public class CECS323JavaTermProject {
             conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }  
+        INPUT.close();
     }
  
     
@@ -152,6 +154,9 @@ public class CECS323JavaTermProject {
             case "7":
                 stmt = "DELETE FROM BOOK WHERE BookTitle = ?";
                 break;
+            case "8":
+                stmt = "INSERT INTO PUBLISHERS (PublisherName, PublisherAddress, PublisherPhone, "
+                        + "PublisherEmail) VALUES (?, ?, ?, ?)";
            default:
                System.out.println("Invalid Input");
                break;
@@ -207,6 +212,10 @@ public class CECS323JavaTermProject {
         } catch (SQLException ex) {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+    }
+    
+    public static void insertNewPublisher (Connection conn) {
         
     }
         
@@ -282,12 +291,7 @@ public class CECS323JavaTermProject {
         }
 
     }
-    
-    public static String fetchUserSelection(String obj) {
-        System.out.println("Please enter the name of the " + obj + ": ");
-        String bindvar = INPUT.nextLine();
-        return bindvar;
-    }
+
 }
     
 
