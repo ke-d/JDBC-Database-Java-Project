@@ -68,6 +68,7 @@ public class CECS323JavaTermProject {
                     
             }
             
+            System.out.println();
             sel = displayOptions();
         
         }
