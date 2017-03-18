@@ -207,7 +207,12 @@ public class CECS323JavaTermProject {
             
         try {
             pstmt.setString(1, bookTitle);
-            pstmt.executeUpdate();
+            int result = pstmt.executeUpdate();
+            if(result == 1) {
+                System.out.println(bookTitle + " was removed from database.");
+            } else {
+                System.out.println(bookTitle + " does not exist.");
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }
