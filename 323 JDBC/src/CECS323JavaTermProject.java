@@ -40,27 +40,31 @@ public class CECS323JavaTermProject {
         while(!sel.equals("9")) {
             switch(sel) {
                 case "1":
-                    displayResultSet(executeStatement(createStatement(sel), conn));
+                    displayResultSet(executeStatement("SELECT * FROM WritingGroup", conn));
                     break;
                 case "2":
-                    displayResultSet(executePreparedStatement(conn, createStatement(sel), getGroupInfo()));
+                    displayResultSet(executePreparedStatement(conn, "SELECT * FROM WritingGroup WHERE GroupName = ?", getGroupInfo()));
                     break;
                 case "3":
-                    displayResultSet(executeStatement(createStatement(sel), conn));
+                    displayResultSet(executeStatement("SELECT * FROM Publisher", conn));
                     break;
                 case "4":
-                    displayResultSet(executePreparedStatement(conn, createStatement(sel), getBookInfo()));
+                    displayResultSet(executePreparedStatement(conn, "SELECT * FROM Book WHERE BookTitle = ?", getBookInfo()));
                     break;
                 case "5":
-                    displayResultSet(executeStatement(createStatement(sel), conn));
+                    displayResultSet(executeStatement("SELECT * FROM Book", conn));
                     break;
                 case "6":
-                    prepareStatementForBookInsert(conn, createStatement(sel));
+                    prepareStatementForBookInsert(conn, "INSERT INTO BOOK (GroupName, BookTitle, PublisherName, YearPublished, NumberPages) "
+                            + "Values(?,?,?,?,?)");
                     break;
                 case "7":
-                    prepareStatementForBookRemove(conn, createStatement(sel));
+                    prepareStatementForBookRemove(conn, "DELETE FROM BOOK WHERE BookTitle = ?");
                     break;
                 case "8":
+                    insertNewPublisherAndReplace(conn, "INSERT INTO PUBLISHER (PublisherName, PublisherAddress, PublisherPhone, "
+                        + "PublisherEmail) VALUES (?, ?, ?, ?)");
+                    break;
                     
             }
             
@@ -78,7 +82,6 @@ public class CECS323JavaTermProject {
  
     
     public static void databaseInput() {
-
         System.out.print("Name of the database (not the user account): ");
         DBNAME = INPUT.nextLine();
         System.out.print("Database user name: ");
@@ -95,6 +98,8 @@ public class CECS323JavaTermProject {
         System.out.println("5. List all books.");
         System.out.println("6. Insert a Book.");
         System.out.println("7. Remove a Book.");
+        System.out.println("8. Insert a new publisher.");
+        System.out.println("Any other input will exit the program.");
 
         String select = INPUT.nextLine();
 
@@ -106,8 +111,6 @@ public class CECS323JavaTermProject {
         Connection conn = null;
         //Constructing the database URL connection string
         DB_URL = DB_URL + DBNAME + ";user="+ USER + ";password=" + PASS;
-        
-        Statement stmt = null;  //initialize the statement that we're using
         
         try {
             //STEP 2: Register JDBC driver
@@ -129,40 +132,6 @@ public class CECS323JavaTermProject {
         return conn;
     }
     
-    public static String createStatement(String select) {
-       String stmt = null;
-        switch(select) {
-           case "1":
-               stmt = "SELECT * FROM WritingGroup";
-               break;
-           case "2":
-               stmt = "SELECT * FROM WritingGroup WHERE GroupName = ?";
-               break;
-           case "3":
-               stmt = "SELECT * FROM Publisher";
-               break;
-           case "4":
-               stmt = "SELECT * FROM Book WHERE BookTitle = ?";
-               break;
-           case "5":
-               stmt = "SELECT * FROM Book";
-               break;
-           case "6":
-                stmt = "INSERT INTO BOOK (GroupName, BookTitle, PublisherName, YearPublished, NumberPages) Values(?,?,?,?,?)";
-                break;
-            case "7":
-                stmt = "DELETE FROM BOOK WHERE BookTitle = ?";
-                break;
-            case "8":
-                stmt = "INSERT INTO PUBLISHERS (PublisherName, PublisherAddress, PublisherPhone, "
-                        + "PublisherEmail) VALUES (?, ?, ?, ?)";
-           default:
-               System.out.println("Invalid Input");
-               break;
-       }
-        return stmt;
-    }
-    
        
     public static void prepareStatementForBookInsert(Connection conn, String stmt) {
         PreparedStatement pstmt = null;
@@ -180,18 +149,34 @@ public class CECS323JavaTermProject {
         System.out.println("Enter the Year Published: ");
         String yearPublished = INPUT.nextLine();
         System.out.println("Enter the Number of Pages: ");
-        int numberPages = INPUT.nextInt();
-            
-        try {
-            pstmt.setString(1, groupName);
-            pstmt.setString(2, bookTitle);
-            pstmt.setString(3, publisherName);
-            pstmt.setString(4, yearPublished);
-            pstmt.setInt(5, numberPages);
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        String numberPages = INPUT.nextLine();
+        
+        boolean continueEntry = true;
+        
+        while (continueEntry) {
+            try {
+                pstmt.setString(1, groupName);
+                pstmt.setString(2, bookTitle);
+                pstmt.setString(3, publisherName);
+                pstmt.setString(4, yearPublished);
+                pstmt.setString(5, numberPages);
+                pstmt.executeUpdate();
+            } catch (SQLIntegrityConstraintViolationException ex) {
+                System.out.println("ERROR: Entered a group or publisher which does not currently exist in the database.");
+                System.out.println("Want to try again? (Y/N)");
+                String input = INPUT.nextLine();
+                continueEntry = (input.equals("y"));
+            } catch (SQLDataException ex) {
+                System.out.println("ERROR: Entered date incorrectly. Please enter as 'mm/dd/yyyy.");
+                System.out.println("Want to try again? (Y/N)");
+                String input = INPUT.nextLine();
+                continueEntry = (input.equals("y"));
+            } catch (SQLException ex) {
+                Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        
+        
         
     }
     
@@ -214,10 +199,64 @@ public class CECS323JavaTermProject {
         
     }
     
-    public static void insertNewPublisher (Connection conn) {
+    public static void insertNewPublisherAndReplace (Connection conn, String stmt) {
+        
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement(stmt);
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String name = null;
+        try {
+            System.out.println("Please enter the publisher name: ");
+            name = INPUT.nextLine();
+            pstmt.setString(1, name);
+            System.out.println("Please enter the publisher address: ");
+            String addr = INPUT.nextLine();
+            pstmt.setString(2, addr);
+            System.out.println("Please enter the publisher phone number: ");
+            String phone = INPUT.nextLine();
+            pstmt.setString(3, phone);
+            System.out.println("Please enter the publisher email: ");
+            String email = INPUT.nextLine();
+            pstmt.setString(4, email);
+        } catch (SQLException ex) {
+            System.out.println("Database error.");
+        }
+        
+        try {
+            pstmt.execute();
+        } catch (SQLException ex) {
+            System.out.println("Encountered database error while trying to execute instruction.");
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        displayResultSet(executeStatement("SELECT PublisherName FROM Publisher", conn));
+        
+        replacePublishers(conn, name);
+    }
+    
+    public static void replacePublishers (Connection conn, String pubName) {
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement("UPDATE BOOK SET PublisherName = ? WHERE PublisherName = ?");
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println("Which publisher should be replaced? (All books will be updated.)");
+        String oldPub = INPUT.nextLine();
+        
+        try {
+            pstmt.setString(1, pubName);
+            pstmt.setString(2, oldPub);
+            pstmt.execute();
+        } catch (SQLException ex) {
+            
+        }
         
     }
-        
     public static String getGroupInfo () {
         System.out.println("Please enter the group name: ");
         String name = INPUT.nextLine();
