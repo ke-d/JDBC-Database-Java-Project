@@ -141,6 +141,9 @@ public class CECS323JavaTermProject {
         } catch (SQLException ex) {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }
+        boolean continueEntry = false;
+        
+        do {
         System.out.println("Enter the Group Name: ");
         String groupName = INPUT.nextLine();
         System.out.println("Enter the Book Title: ");
@@ -152,30 +155,41 @@ public class CECS323JavaTermProject {
         System.out.println("Enter the Number of Pages: ");
         String numberPages = INPUT.nextLine();
         
-        boolean continueEntry = true;
-        
-        while (continueEntry) {
             try {
                 pstmt.setString(1, groupName);
                 pstmt.setString(2, bookTitle);
                 pstmt.setString(3, publisherName);
                 pstmt.setString(4, yearPublished);
                 pstmt.setString(5, numberPages);
+                continueEntry = false;
                 pstmt.executeUpdate();
             } catch (SQLIntegrityConstraintViolationException ex) {
-                System.out.println("ERROR: Entered a group or publisher which does not currently exist in the database.");
+                //System.out.println(ex.getMessage());
+                if(ex.getMessage().contains("BOOK_FK01")) {
+                    System.out.println("ERROR: Group does not exist in database.");
+                } else if (ex.getMessage().contains("BOOK_FK02")) {
+                    System.out.println("ERROR: Publisher does not exist in database.");
+                }
                 System.out.println("Want to try again? (Y/N)");
                 String input = INPUT.nextLine();
+                input = input.toLowerCase();
                 continueEntry = (input.equals("y"));
             } catch (SQLDataException ex) {
-                System.out.println("ERROR: Entered date incorrectly. Please enter as 'mm/dd/yyyy.");
+                //System.out.println(ex.getMessage());
+                if(ex.getMessage().equals("The syntax of the string representation of a date/time value is incorrect.")) {
+                    System.out.println("ERROR: Entered date incorrectly. Please enter as 'mm-dd-yyyy.'");
+                } else if (ex.getMessage().equals("Invalid character string format for type INTEGER.")) {
+                    System.out.println("ERROR: Entered not an integer for number of pages. Please enter as an integer.");
+                }
+                
                 System.out.println("Want to try again? (Y/N)");
                 String input = INPUT.nextLine();
+                input = input.toLowerCase();
                 continueEntry = (input.equals("y"));
             } catch (SQLException ex) {
                 Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        } while(continueEntry);
         
         
         
