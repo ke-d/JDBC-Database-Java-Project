@@ -18,7 +18,7 @@ public class CECS323JavaTermProject {
     static Scanner INPUT = new Scanner(System.in);
 // JDBC driver name and database URL
     static final String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
-    static String DB_URL = "jdbc:derby://localhost:1527/";
+    static String DB_URL;
 //            + "testdb;user=";
 /**
  * Takes the input string and outputs "N/A" if the string is empty or null.
@@ -34,7 +34,6 @@ public class CECS323JavaTermProject {
     }
     
     public static void main(String[] args) {
-        databaseInput();
         Connection conn = connectToDB();
         String sel = displayOptions();
         while(!sel.equals("9")) {
@@ -109,26 +108,35 @@ public class CECS323JavaTermProject {
     }
     
     public static Connection connectToDB() {
-        Connection conn = null;
-        //Constructing the database URL connection string
-        DB_URL = DB_URL + DBNAME + ";user="+ USER + ";password=" + PASS;
+        Connection conn;
         
-        try {
-            //STEP 2: Register JDBC driver
-            Class.forName("org.apache.derby.jdbc.ClientDriver");
+        boolean exceptionThrown = false;
+        do {
+            conn = null;
+            databaseInput();
+            //Constructing the database URL connection string
+            DB_URL = "jdbc:derby://localhost:1527/" + DBNAME + ";user="+ USER + ";password=" + PASS;
+            System.out.print(DB_URL);
+            try {
+                //STEP 2: Register JDBC driver
+                Class.forName("org.apache.derby.jdbc.ClientDriver");
 
-            //STEP 3: Open a connection
-            System.out.println("Connecting to database...");
-            conn = DriverManager.getConnection(DB_URL);
-            
-            System.out.println("Succesfully connected to DB!");
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } catch (Exception e) {
-            //Handle errors for Class.forName
-            e.printStackTrace();
-        } 
+                //STEP 3: Open a connection
+                System.out.println("Connecting to database...");
+                conn = DriverManager.getConnection(DB_URL);
+
+                System.out.println("Succesfully connected to DB!");
+                exceptionThrown = false;
+            } catch (SQLException se) {
+                System.out.println("Error connecting to database. Please check database connection and credentials.");
+                exceptionThrown = true;
+            } catch (Exception e) {
+                //Handle errors for Class.forName
+                System.out.println("Error. Please try again.");
+                exceptionThrown = true;
+            } 
+        } while (exceptionThrown);
+       
          
         return conn;
     }
