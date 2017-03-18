@@ -274,8 +274,8 @@ public class CECS323JavaTermProject {
         ResultSet returnSet = null;
         PreparedStatement pstmt = null;
         try {
-            System.out.println(stmt);
-            System.out.println(bindVar);
+//            System.out.println(stmt);
+//            System.out.println(bindVar);
             pstmt = conn.prepareStatement(stmt);
             pstmt.setString(1, bindVar);
             returnSet = pstmt.executeQuery();
