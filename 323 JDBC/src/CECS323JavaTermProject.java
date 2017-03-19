@@ -103,7 +103,7 @@ public class CECS323JavaTermProject {
         System.out.println("7. Remove a Book.");
         System.out.println("8. Insert a new publisher.");
         System.out.println("9. Insert a new group.");
-        System.out.println("Any other input will exit the program.");
+        System.out.println("10. Exit");
 
         String select = INPUT.nextLine();
 
