@@ -36,7 +36,7 @@ public class CECS323JavaTermProject {
     public static void main(String[] args) {
         Connection conn = connectToDB();
         String sel = displayOptions();
-        while(!sel.equals("9")) {
+        while(!sel.equals("10")) {
             switch(sel) {
                 case "1":
                     displayResultSet(executeStatement("SELECT * FROM WritingGroup", conn));
@@ -64,7 +64,10 @@ public class CECS323JavaTermProject {
                     insertNewPublisherAndReplace(conn, "INSERT INTO PUBLISHER (PublisherName, PublisherAddress, PublisherPhone, "
                         + "PublisherEmail) VALUES (?, ?, ?, ?)");
                     break;
-                    
+                case "9":
+                    prepareStatementForGroupInsert (conn, "INSERT INTO WRITINGGROUP(GroupName, HeadWriter, YearFormed, Subject) " +
+                            "Values(?,?,?,?)");
+                    break;
             }
             
             System.out.println();
@@ -99,6 +102,7 @@ public class CECS323JavaTermProject {
         System.out.println("6. Insert a Book.");
         System.out.println("7. Remove a Book.");
         System.out.println("8. Insert a new publisher.");
+        System.out.println("9. Insert a new group.");
         System.out.println("Any other input will exit the program.");
 
         String select = INPUT.nextLine();
@@ -263,6 +267,43 @@ public class CECS323JavaTermProject {
         displayResultSet(executeStatement("SELECT PublisherName FROM Publisher", conn));
         
         replacePublishers(conn, name);
+    }
+    
+        public static void prepareStatementForGroupInsert (Connection conn, String stmt) {
+        
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement(stmt);
+        } catch (SQLException ex) {
+            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String name = null;
+        try {
+            System.out.println("Please enter the group name: ");
+            name = INPUT.nextLine();
+            pstmt.setString(1, name);
+            System.out.println("Please enter the head writer: ");
+            String writer = INPUT.nextLine();
+            pstmt.setString(2, writer);
+            System.out.println("Please enter the year formed: ");
+            String year = INPUT.nextLine();
+            pstmt.setString(3, year);
+            System.out.println("Please enter the group subject: ");
+            String subject = INPUT.nextLine();
+            pstmt.setString(4, subject);
+            
+            int result = pstmt.executeUpdate();
+            if(result == 1) {
+                System.out.println(name + " added.");
+            } else {
+                System.out.println(name + " not added.");
+            }
+        } catch (SQLDataException ex) {
+            System.out.println("Year is not in the right format.");
+        } catch (SQLException ex) {
+            System.out.println("Database error.");
+        } 
+    
     }
     
     public static void replacePublishers (Connection conn, String pubName) {
