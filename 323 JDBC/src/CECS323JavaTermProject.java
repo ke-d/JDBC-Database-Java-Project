@@ -19,7 +19,7 @@ public class CECS323JavaTermProject {
 // JDBC driver name and database URL
     static final String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
     static String DB_URL;
-//            + "testdb;user=";
+
 /**
  * Takes the input string and outputs "N/A" if the string is empty or null.
  * @param input The string to be mapped.
@@ -80,6 +80,9 @@ public class CECS323JavaTermProject {
         INPUT.close();
     }
  
+    /**
+     * Fetches the name and credentials of a database from the user.
+     */
     
     public static void databaseInput() {
         System.out.print("Name of the database (not the user account): ");
@@ -89,7 +92,11 @@ public class CECS323JavaTermProject {
         System.out.print("Database password: ");
         PASS = INPUT.nextLine();
     }
-    
+    /**
+     * Displays all options the user has.
+     * 
+     * @return Returns a string of the selection number.
+     */
     public static String displayOptions() {
         System.out.println("1. List all writing groups.");
         System.out.println("2. List all information from a specific writing group.");
@@ -99,7 +106,7 @@ public class CECS323JavaTermProject {
         System.out.println("6. Insert a Book.");
         System.out.println("7. Remove a Book.");
         System.out.println("8. Insert a new publisher.");
-        System.out.println("Any other input will exit the program.");
+        System.out.println("9. Exit the program.");
 
         String select = INPUT.nextLine();
 
@@ -107,16 +114,25 @@ public class CECS323JavaTermProject {
        
     }
     
+    /**
+     * Method to handling the connection to the database, dependent on user's input.
+     * 
+     * @return Returns a connection object to the database.
+     */
     public static Connection connectToDB() {
-        Connection conn;
+        //Initializes the connection
+        Connection conn = null;
         
         boolean exceptionThrown = false;
+        
         do {
-            conn = null;
+            
+            //gets database information from the user
             databaseInput();
+            
             //Constructing the database URL connection string
             DB_URL = "jdbc:derby://localhost:1527/" + DBNAME + ";user="+ USER + ";password=" + PASS;
-            System.out.print(DB_URL);
+            
             try {
                 //STEP 2: Register JDBC driver
                 Class.forName("org.apache.derby.jdbc.ClientDriver");
@@ -128,6 +144,7 @@ public class CECS323JavaTermProject {
                 System.out.println("Succesfully connected to DB!");
                 exceptionThrown = false;
             } catch (SQLException se) {
+                //handles issues with database connection
                 System.out.println("Error connecting to database. Please check database connection and credentials.");
                 exceptionThrown = true;
             } catch (Exception e) {
@@ -227,13 +244,21 @@ public class CECS323JavaTermProject {
         
     }
     
+    /**
+     * Method to handle the insertion and following replacement of a current publisher in its books.
+     * 
+     * @param conn Connection to the database.
+     * @param stmt The prepared statement to be execute.
+     */
     public static void insertNewPublisherAndReplace (Connection conn, String stmt) {
         
+        //initializes prepared statement object
         PreparedStatement pstmt = null;
+        
         try {
             pstmt = conn.prepareStatement(stmt);
         } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error regarding prepared statement.");
         }
         String name = null;
         try {
@@ -257,21 +282,28 @@ public class CECS323JavaTermProject {
             pstmt.execute();
         } catch (SQLException ex) {
             System.out.println("Encountered database error while trying to execute instruction.");
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         displayResultSet(executeStatement("SELECT PublisherName FROM Publisher", conn));
         
         replacePublishers(conn, name);
     }
-    
+    /**
+     * Replaces publisher in its books.
+     * 
+     * @param conn Connection to database.
+     * @param pubName The name of the publisher to be replaced.
+     */
     public static void replacePublishers (Connection conn, String pubName) {
         PreparedStatement pstmt = null;
+        
+        //create
         try {
             pstmt = conn.prepareStatement("UPDATE BOOK SET PublisherName = ? WHERE PublisherName = ?");
         } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Encountered an error while replacing publisher.");
         }
+        
         
         System.out.println("Which publisher should be replaced? (All books will be updated.)");
         String oldPub = INPUT.nextLine();
@@ -285,32 +317,57 @@ public class CECS323JavaTermProject {
         }
         
     }
+    
+    /**
+     * Method to fetch the name of the group from the user.
+     * 
+     * @return Returns the name of the group that the user entered.
+     */
     public static String getGroupInfo () {
         System.out.println("Please enter the group name: ");
         String name = INPUT.nextLine();
         return name;      
     }
     
+    /**
+     * Method to fetch the name of the book from the user.
+     * 
+     * @return Returns the name of the book the user entered.
+     */
     public static String getBookInfo() {
         System.out.println("Please enter the book name: ");
         String name = INPUT.nextLine();
         return name;
     }
     
+    /**
+     * Executes a prepared statement that has only one String bind variable.
+     * 
+     * @param conn Connection to database.
+     * @param stmt Prepared statement to be executed.
+     * @param bindVar Bind variable for prepared statement.
+     * @return 
+     */
     public static ResultSet executePreparedStatement(Connection conn, String stmt, String bindVar) {
         ResultSet returnSet = null;
         PreparedStatement pstmt = null;
         try {
-//            System.out.println(stmt);
-//            System.out.println(bindVar);
             pstmt = conn.prepareStatement(stmt);
             pstmt.setString(1, bindVar);
             returnSet = pstmt.executeQuery();
         } catch (SQLException ex) {
-             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+             System.out.println("Execution error.");
         }
         return returnSet;
     }
+    
+    /**
+     * Executes a regular non-prepared statement.
+     * 
+     * @param instr String of the statement to be executed.
+     * @param conn Database connection that is being acted upon by statement.
+     * @return Returns resultSet of that statement on the database.
+     */
     public static ResultSet executeStatement(String instr, Connection conn) {
 
         ResultSet returnRS = null;
@@ -322,6 +379,11 @@ public class CECS323JavaTermProject {
         }
         return returnRS;
     }
+    
+    /**
+     * Displays a result set.
+     * @param result Result set to be displayed.
+     */
     
     public static void displayResultSet(ResultSet result) {
         ResultSetMetaData data = null;
@@ -340,7 +402,8 @@ public class CECS323JavaTermProject {
             }
             
             String displayFormat = "%-" + maxSize + "s";
-          
+            
+            //display column headings
             for (int i = 0; i<colNames.size(); i++) {
                 System.out.printf(displayFormat, colNames.get(i));
             }
