@@ -423,45 +423,50 @@ public class CECS323JavaTermProject {
     public static void displayResultSet(ResultSet result) {
         ResultSetMetaData data = null;
         
-        try {
-            //throws exception if no results
-            result.isFirst();
-        } catch (SQLException ex) {
-            //we know it's because there's no results so just output that fact.
-            System.out.println("No result found!");
-            return;
-        }
+//        try {
+//            //throws exception if no results
+//            result.isFirst();
+//        } catch (SQLException ex) {
+//            //we know it's because there's no results so just output that fact.
+//            System.out.println("No result found!");
+//            return;
+//        }
         
         
         
         try {
-            data = result.getMetaData();
-            ArrayList<String> colNames = new ArrayList<>();
-            
-            //get default col size
-            int maxSize = data.getColumnDisplaySize(1);
-            //get column names
-            for (int i = 1; i <= data.getColumnCount(); i++) {
-                colNames.add(data.getColumnName(i));
-                if (data.getColumnDisplaySize(i)>maxSize) {
-                    maxSize = data.getColumnDisplaySize(i);  
+            if (!result.next()) {
+                System.out.println("No data found.");
+            } else {
+                data = result.getMetaData();
+                ArrayList<String> colNames = new ArrayList<>();
+
+                //get default col size
+                int maxSize = data.getColumnDisplaySize(1);
+                //get column names
+                for (int i = 1; i <= data.getColumnCount(); i++) {
+                    colNames.add(data.getColumnName(i));
+                    if (data.getColumnDisplaySize(i)>maxSize) {
+                        maxSize = data.getColumnDisplaySize(i);  
+                    }
                 }
-            }
-            
-            String displayFormat = "%-" + maxSize + "s";
-            System.out.println();
-            //display column headings
-            for (int i = 0; i<colNames.size(); i++) {
-                System.out.printf(displayFormat, colNames.get(i));
-            }
-            System.out.println();
-            //display columns
-            while (result.next()) {
-                for (int i = 0; i < colNames.size(); i++) {
-                    System.out.printf(displayFormat, result.getString(colNames.get(i)));
+
+                String displayFormat = "%-" + maxSize + "s";
+                System.out.println();
+                //display column headings
+                for (int i = 0; i<colNames.size(); i++) {
+                    System.out.printf(displayFormat, colNames.get(i));
                 }
                 System.out.println();
-             }
+                //display columns
+            
+                do {
+                    for (int i = 0; i < colNames.size(); i++) {
+                        System.out.printf(displayFormat, result.getString(colNames.get(i)));
+                    }
+                    System.out.println();
+                } while (result.next());
+}
             System.out.println();
         } catch (SQLException ex) {
             System.out.println("Error encountered while displaying results.");
