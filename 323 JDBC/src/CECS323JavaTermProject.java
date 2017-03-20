@@ -1,16 +1,24 @@
-//package cecs.pkg323.java.term.project;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
- * @author Mimi Opkins with some tweaking from Dave Brown. Done by Kenny Do and Wesley Slates
+ * JDBC Project
+ * Wesley Slates
+ * Kenny Do
+ * CECS 323
+ * 3/20/17
+ * 
+ * CECS 323 JDBC project. This program connects to a pre-defined Derby database
+ * and allows the user to execute several different commands to enter and retrieve
+ * data from the database.
+ * 
+ * @author Mimi Opkins with some tweaking from Dave Brown. 
+ * @author Kenny Do
+ * @author Wesley Slates
  * 
  */
+
 public class CECS323JavaTermProject {
 
     //  Database credentials
@@ -18,7 +26,8 @@ public class CECS323JavaTermProject {
     static String PASS;
     static String DBNAME;
     static Scanner INPUT = new Scanner(System.in);
-// JDBC driver name and database URL
+    
+    // JDBC driver name and database URL
     static final String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
     static String DB_URL;
 
@@ -67,7 +76,7 @@ public class CECS323JavaTermProject {
         try {
             conn.close();
         } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error closing database connection.");
         }
         INPUT.close();
     }
@@ -98,7 +107,7 @@ public class CECS323JavaTermProject {
         System.out.println("6. Insert a Book.");
         System.out.println("7. Remove a Book.");
         System.out.println("8. Insert a new publisher.");
-        System.out.println("9. Insert a new group.");
+        System.out.println("9. Insert a new group and replace a current one.");
         System.out.println("10. Exit");
         System.out.printf("\n%s", "Please enter your selection: ");
         String select = INPUT.nextLine();
@@ -169,7 +178,7 @@ public class CECS323JavaTermProject {
         try {
             pstmt = conn.prepareStatement(stmt);
         } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error regarding prepared statement.");
         }
         boolean continueEntry = false;
 
@@ -231,7 +240,7 @@ public class CECS323JavaTermProject {
         try {
             pstmt = conn.prepareStatement(stmt);
         } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error regarding prepared statement.");
         }
         System.out.println();
         System.out.println("Enter the Book Title: ");
@@ -246,7 +255,7 @@ public class CECS323JavaTermProject {
                 System.out.println(bookTitle + " does not exist in the database.");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Encountered error.");
         }
 
     }
@@ -309,7 +318,7 @@ public class CECS323JavaTermProject {
         try {
             pstmt = conn.prepareStatement(stmt);
         } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error regarding prepared statement.");
         }
         String name = null;
         try {
@@ -432,7 +441,7 @@ public class CECS323JavaTermProject {
             Statement stmt = conn.createStatement();
             returnRS = stmt.executeQuery(instr);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            System.out.println("Error executing instruction.");
         }
         return returnRS;
     }
