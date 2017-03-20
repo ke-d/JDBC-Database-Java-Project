@@ -136,7 +136,11 @@ public class CECS323JavaTermProject {
             databaseInput();
             
             //Constructing the database URL connection string
-            DB_URL = "jdbc:derby://localhost:1527/" + DBNAME + ";user="+ USER + ";password=" + PASS;
+            DB_URL = "jdbc:derby://localhost:1527/" + DBNAME;
+            
+            //handles a username and password, if there's one
+            if (!USER.isEmpty() && !PASS.isEmpty())
+                DB_URL += ";user="+ USER + ";password=" + PASS;
             
             try {
                 //STEP 2: Register JDBC driver
@@ -149,6 +153,7 @@ public class CECS323JavaTermProject {
                 System.out.println("Succesfully connected to DB!");
                 exceptionThrown = false;
             } catch (SQLException se) {
+                //Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, se);
                 //handles issues with database connection
                 System.out.println("Error connecting to database. Please check database connection and credentials.");
                 exceptionThrown = true;
