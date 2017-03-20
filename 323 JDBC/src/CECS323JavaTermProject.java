@@ -20,19 +20,6 @@ public class CECS323JavaTermProject {
     static final String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
     static String DB_URL;
 
-/**
- * Takes the input string and outputs "N/A" if the string is empty or null.
- * @param input The string to be mapped.
- * @return  Either the input string or "N/A" as appropriate.
- */
-    public static String dispNull (String input) {
-        //because of short circuiting, if it's null, it never checks the length.
-        if (input == null || input.length() == 0)
-            return "N/A";
-        else
-            return input;
-    }
-    
     public static void main(String[] args) {
         Connection conn = connectToDB();
         String sel = displayOptions();
@@ -109,10 +96,9 @@ public class CECS323JavaTermProject {
         System.out.println("6. Insert a Book.");
         System.out.println("7. Remove a Book.");
         System.out.println("8. Insert a new publisher.");
-        System.out.println("9. Exit the program.");
         System.out.println("9. Insert a new group.");
         System.out.println("10. Exit");
-
+        System.out.printf("\n%s", "Please enter your selection: ");
         String select = INPUT.nextLine();
 
         return select;
@@ -161,10 +147,11 @@ public class CECS323JavaTermProject {
                 //Handle errors for Class.forName
                 System.out.println("Error. Please try again.");
                 exceptionThrown = true;
-            } 
+            } finally {
+                System.out.println();
+            }
         } while (exceptionThrown);
-       
-         
+      
         return conn;
     }
     
@@ -179,16 +166,17 @@ public class CECS323JavaTermProject {
         boolean continueEntry = false;
         
         do {
-        System.out.println("Enter the Group Name: ");
-        String groupName = INPUT.nextLine();
-        System.out.println("Enter the Book Title: ");
-        String bookTitle = INPUT.nextLine();
-        System.out.println("Enter the Publisher Name: ");
-        String publisherName = INPUT.nextLine();
-        System.out.println("Enter the Year Published: ");
-        String yearPublished = INPUT.nextLine();
-        System.out.println("Enter the Number of Pages: ");
-        String numberPages = INPUT.nextLine();
+            System.out.println();
+            System.out.println("Enter the Group Name: ");
+            String groupName = INPUT.nextLine();
+            System.out.println("Enter the Book Title: ");
+            String bookTitle = INPUT.nextLine();
+            System.out.println("Enter the Publisher Name: ");
+            String publisherName = INPUT.nextLine();
+            System.out.println("Enter the Year Published: ");
+            String yearPublished = INPUT.nextLine();
+            System.out.println("Enter the Number of Pages: ");
+            String numberPages = INPUT.nextLine();
         
             try {
                 pstmt.setString(1, groupName);
@@ -210,24 +198,19 @@ public class CECS323JavaTermProject {
                 input = input.toLowerCase();
                 continueEntry = (input.equals("y"));
             } catch (SQLDataException ex) {
-                //System.out.println(ex.getMessage());
-                if(ex.getMessage().equals("The syntax of the string representation of a date/time value is incorrect.")) {
-                    System.out.println("ERROR: Entered date incorrectly. Please enter as 'mm-dd-yyyy.'");
-                } else if (ex.getMessage().equals("Invalid character string format for type INTEGER.")) {
-                    System.out.println("ERROR: Entered not an integer for number of pages. Please enter as an integer.");
-                }
+        
+                System.out.println("ERROR: Entered not an integer for number of pages or the year. Please enter as an integer.");
                 
                 System.out.println("Want to try again? (Y/N)");
                 String input = INPUT.nextLine();
                 input = input.toLowerCase();
                 continueEntry = (input.equals("y"));
             } catch (SQLException ex) {
-                Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Encountered error.");
+            } finally {
+                System.out.println();
             }
-        } while(continueEntry);
-        
-        
-        
+        } while(continueEntry); 
     }
     
         public static void prepareStatementForBookRemove(Connection conn, String stmt) {
@@ -237,6 +220,7 @@ public class CECS323JavaTermProject {
         } catch (SQLException ex) {
             Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println();
         System.out.println("Enter the Book Title: ");
         String bookTitle = INPUT.nextLine();
             
@@ -362,8 +346,9 @@ public class CECS323JavaTermProject {
             pstmt.setString(1, pubName);
             pstmt.setString(2, oldPub);
             pstmt.execute();
+            System.out.println("Publisher successfully added and replaced.");
         } catch (SQLException ex) {
-            
+            System.out.println("Encountered an error while replacing publisher.");
         }
         
     }
@@ -437,6 +422,18 @@ public class CECS323JavaTermProject {
     
     public static void displayResultSet(ResultSet result) {
         ResultSetMetaData data = null;
+        
+        try {
+            //throws exception if no results
+            result.isFirst();
+        } catch (SQLException ex) {
+            //we know it's because there's no results so just output that fact.
+            System.out.println("No result found!");
+            return;
+        }
+        
+        
+        
         try {
             data = result.getMetaData();
             ArrayList<String> colNames = new ArrayList<>();
@@ -452,7 +449,7 @@ public class CECS323JavaTermProject {
             }
             
             String displayFormat = "%-" + maxSize + "s";
-            
+            System.out.println();
             //display column headings
             for (int i = 0; i<colNames.size(); i++) {
                 System.out.printf(displayFormat, colNames.get(i));
@@ -465,8 +462,9 @@ public class CECS323JavaTermProject {
                 }
                 System.out.println();
              }
+            System.out.println();
         } catch (SQLException ex) {
-            Logger.getLogger(CECS323JavaTermProject.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error encountered while displaying results.");
         }
 
     }
