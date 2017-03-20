@@ -106,8 +106,8 @@ public class CECS323JavaTermProject {
         System.out.println("5. List all books.");
         System.out.println("6. Insert a Book.");
         System.out.println("7. Remove a Book.");
-        System.out.println("8. Insert a new publisher.");
-        System.out.println("9. Insert a new group and replace a current one.");
+        System.out.println("8. Insert a new publisher and replace a current one.");
+        System.out.println("9. Insert a new group.");
         System.out.println("10. Exit");
         System.out.printf("\n%s", "Please enter your selection: ");
         String select = INPUT.nextLine();
