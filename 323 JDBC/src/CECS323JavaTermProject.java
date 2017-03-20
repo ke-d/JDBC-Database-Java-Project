@@ -34,35 +34,38 @@ public class CECS323JavaTermProject {
     public static void main(String[] args) {
         Connection conn = connectToDB();
         String sel = displayOptions();
-        while (!sel.equals("10")) {
+        while (!sel.equals("11")) {
             switch (sel) {
                 case "1":
                     displayResultSet(executeStatement("SELECT * FROM WritingGroup", conn));
                     break;
                 case "2":
-                    displayResultSet(executePreparedStatement(conn, "SELECT * FROM WritingGroup WHERE GroupName = ?", getGroupInfo()));
+                    displayResultSet(executePreparedStatement(conn, "SELECT * FROM WritingGroup WHERE GroupName = ?", getInfo("group")));
                     break;
                 case "3":
                     displayResultSet(executeStatement("SELECT * FROM Publisher", conn));
                     break;
                 case "4":
-                    displayResultSet(executePreparedStatement(conn, "SELECT * FROM Book WHERE BookTitle = ?", getBookInfo()));
+                    displayResultSet(executePreparedStatement(conn, "SELECT * FROM Publisher WHERE PublisherName = ?", getInfo("Publisher")));
                     break;
                 case "5":
                     displayResultSet(executeStatement("SELECT * FROM Book", conn));
                     break;
                 case "6":
+                    displayResultSet(executePreparedStatement(conn, "SELECT * FROM Book WHERE BookTitle = ?", getInfo("book")));
+                    break;
+                case "7":
                     prepareStatementForBookInsert(conn, "INSERT INTO BOOK (GroupName, BookTitle, PublisherName, YearPublished, NumberPages) "
                             + "Values(?,?,?,?,?)");
                     break;
-                case "7":
+                case "8":
                     prepareStatementForBookRemove(conn, "DELETE FROM BOOK WHERE BookTitle = ?");
                     break;
-                case "8":
+                case "9":
                     insertNewPublisherAndReplace(conn, "INSERT INTO PUBLISHER (PublisherName, PublisherAddress, PublisherPhone, "
                             + "PublisherEmail) VALUES (?, ?, ?, ?)");
                     break;
-                case "9":
+                case "10":
                     prepareStatementForGroupInsert(conn, "INSERT INTO WRITINGGROUP(GroupName, HeadWriter, YearFormed, Subject) "
                             + "Values(?,?,?,?)");
                     break;
@@ -102,13 +105,14 @@ public class CECS323JavaTermProject {
         System.out.println("1. List all writing groups.");
         System.out.println("2. List all information from a specific writing group.");
         System.out.println("3. List all publishers.");
-        System.out.println("4. List all information from a specific book.");
+        System.out.println("4. List all information from a specific publisher.");
         System.out.println("5. List all books.");
-        System.out.println("6. Insert a Book.");
-        System.out.println("7. Remove a Book.");
-        System.out.println("8. Insert a new publisher and replace a current one.");
-        System.out.println("9. Insert a new group.");
-        System.out.println("10. Exit");
+        System.out.println("6. List all information from a specific book.");     
+        System.out.println("7. Insert a Book.");
+        System.out.println("8. Remove a Book.");
+        System.out.println("9. Insert a new publisher and replace a current one.");
+        System.out.println("10. Insert a new group.");
+        System.out.println("11. Exit");
         System.out.printf("\n%s", "Please enter your selection: ");
         String select = INPUT.nextLine();
 
@@ -389,19 +393,8 @@ public class CECS323JavaTermProject {
      *
      * @return Returns the name of the group that the user entered.
      */
-    public static String getGroupInfo() {
-        System.out.println("Please enter the group name: ");
-        String name = INPUT.nextLine();
-        return name;
-    }
-
-    /**
-     * Method to fetch the name of the book from the user.
-     *
-     * @return Returns the name of the book the user entered.
-     */
-    public static String getBookInfo() {
-        System.out.println("Please enter the book name: ");
+    public static String getInfo(String var) {
+        System.out.println("Please enter the " + var + " name: ");
         String name = INPUT.nextLine();
         return name;
     }

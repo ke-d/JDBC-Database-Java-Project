@@ -1,20 +1,21 @@
 run:
-Name of the database (not the user account): Project
-Database user name: 
-Database password: 
+Name of the database (not the user account): FinalProjectDatabase
+Database user name: cecs
+Database password: cecs
 Connecting to database...
 Succesfully connected to DB!
 
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
 Please enter your selection: 1
 
@@ -26,13 +27,14 @@ CECS 323                                                                        
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
 Please enter your selection: 2
 Please enter the group name: 
@@ -45,13 +47,14 @@ CECS 323                                                                        
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
 Please enter your selection: 3
 
@@ -64,13 +67,34 @@ The Slates Mates Publishing                                                     
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
+
+Please enter your selection: 4
+Please enter the Publisher name: 
+Do and Co.
+
+PUBLISHERNAME                                                                                       PUBLISHERADDRESS                                                                                    PUBLISHERPHONE                                                                                      PUBLISHEREMAIL                                                                                      
+Do and Co.                                                                                          123 Canada Avenue Cooltown, New Mexico 12345                                                        949-123-4567                                                                                        kenny@doand.co                                                                                      
+
+
+1. List all writing groups.
+2. List all information from a specific writing group.
+3. List all publishers.
+4. List all information from a specific publisher.
+5. List all books.
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
 Please enter your selection: 5
 
@@ -83,63 +107,65 @@ CECS 323                                                                        
 CECS 323                                                                                            The Ethical Dilemma That Is Many to Many                                                            Do and Co.                                                                                          2017                                                                                                143                                                                                                 
 CECS 323                                                                                            Why Wesley and Kenny should get an A. An introspective look.                                        The Slates Mates Publishing                                                                         2017                                                                                                503                                                                                                 
 CECS 323                                                                                            UML and Relation Schemes: A Love Story                                                              The Slates Mates Publishing                                                                         2017                                                                                                278                                                                                                 
-CECS 323                                                                                            How to Take Over The World Using Tactics Taught in CECS 323                                         The Slates Mates Publishing                                                                         2017                                                                                                243                                                                                                 
 
 
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
-
-Please enter your selection: 4
-Please enter the book name: 
-Why Wesley and Kenny should get an A. An introspective look.
-
-GROUPNAME                                                                                           BOOKTITLE                                                                                           PUBLISHERNAME                                                                                       YEARPUBLISHED                                                                                       NUMBERPAGES                                                                                         
-CECS 323                                                                                            Why Wesley and Kenny should get an A. An introspective look.                                        The Slates Mates Publishing                                                                         2017                                                                                                503                                                                                                 
-
-
-1. List all writing groups.
-2. List all information from a specific writing group.
-3. List all publishers.
-4. List all information from a specific book.
-5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
 Please enter your selection: 6
+Please enter the book name: 
+How to Recreate "Back to the Future" Using a Time Machine
+
+GROUPNAME                                                                                           BOOKTITLE                                                                                           PUBLISHERNAME                                                                                       YEARPUBLISHED                                                                                       NUMBERPAGES                                                                                         
+The Time Traveling Writers                                                                          How to Recreate "Back to the Future" Using a Time Machine                                           Twain Publishing                                                                                    1985                                                                                                200                                                                                                 
+
+
+1. List all writing groups.
+2. List all information from a specific writing group.
+3. List all publishers.
+4. List all information from a specific publisher.
+5. List all books.
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
+
+Please enter your selection: 7
 
 Enter the Group Name: 
 CECS 323
 Enter the Book Title: 
-A Database: The Hidden Gem in a World of Chaos
+The Database: A Gem in a World of Chaos
 Enter the Publisher Name: 
-Do and Co.
+The Slates Mates Publishing
 Enter the Year Published: 
-2017
+2013
 Enter the Number of Pages: 
-324
+124
 
 
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
 Please enter your selection: 5
 
@@ -152,45 +178,71 @@ CECS 323                                                                        
 CECS 323                                                                                            The Ethical Dilemma That Is Many to Many                                                            Do and Co.                                                                                          2017                                                                                                143                                                                                                 
 CECS 323                                                                                            Why Wesley and Kenny should get an A. An introspective look.                                        The Slates Mates Publishing                                                                         2017                                                                                                503                                                                                                 
 CECS 323                                                                                            UML and Relation Schemes: A Love Story                                                              The Slates Mates Publishing                                                                         2017                                                                                                278                                                                                                 
-CECS 323                                                                                            How to Take Over The World Using Tactics Taught in CECS 323                                         The Slates Mates Publishing                                                                         2017                                                                                                243                                                                                                 
-CECS 323                                                                                            A Database: The Hidden Gem in a World of Chaos                                                      Do and Co.                                                                                          2017                                                                                                324                                                                                                 
+CECS 323                                                                                            The Database: A Gem in a World of Chaos                                                             The Slates Mates Publishing                                                                         2013                                                                                                124                                                                                                 
 
 
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
-
-Please enter your selection: 7
-
-Enter the Book Title: 
-A Database: The Hidden Gem in a World of Chaos 
-A Database: The Hidden Gem in a World of Chaos  was removed from the database.
-
-1. List all writing groups.
-2. List all information from a specific writing group.
-3. List all publishers.
-4. List all information from a specific book.
-5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
 Please enter your selection: 8
+
+Enter the Book Title: 
+The Database: A Gem in a World of Chaos
+The Database: A Gem in a World of Chaos was removed from the database.
+
+1. List all writing groups.
+2. List all information from a specific writing group.
+3. List all publishers.
+4. List all information from a specific publisher.
+5. List all books.
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
+
+Please enter your selection: 5
+
+GROUPNAME                                                                                           BOOKTITLE                                                                                           PUBLISHERNAME                                                                                       YEARPUBLISHED                                                                                       NUMBERPAGES                                                                                         
+The Time Traveling Writers                                                                          How to Not Destroy the Space Time Continuum                                                         Twain Publishing                                                                                    2154                                                                                                12                                                                                                  
+The Time Traveling Writers                                                                          Mark Twain on the 2016 Election                                                                     Twain Publishing                                                                                    2017                                                                                                423                                                                                                 
+The Time Traveling Writers                                                                          How to Recreate "Back to the Future" Using a Time Machine                                           Twain Publishing                                                                                    1985                                                                                                200                                                                                                 
+The Time Traveling Writers                                                                          How The New World Order Compares to Orwellian 1984                                                  Twain Publishing                                                                                    2220                                                                                                163                                                                                                 
+CECS 323                                                                                            How to Build a Database                                                                             Do and Co.                                                                                          2017                                                                                                213                                                                                                 
+CECS 323                                                                                            The Ethical Dilemma That Is Many to Many                                                            Do and Co.                                                                                          2017                                                                                                143                                                                                                 
+CECS 323                                                                                            Why Wesley and Kenny should get an A. An introspective look.                                        The Slates Mates Publishing                                                                         2017                                                                                                503                                                                                                 
+CECS 323                                                                                            UML and Relation Schemes: A Love Story                                                              The Slates Mates Publishing                                                                         2017                                                                                                278                                                                                                 
+
+
+1. List all writing groups.
+2. List all information from a specific writing group.
+3. List all publishers.
+4. List all information from a specific publisher.
+5. List all books.
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
+
+Please enter your selection: 9
 Please enter the publisher name: 
 Slates Publishing
 Please enter the publisher address: 
-123 Address Street, City State 12345
+123 Address Street City State 12345
 Please enter the publisher phone number: 
-714-911-9111
+123-456-7890
 Please enter the publisher email: 
 email@email.com
 
@@ -207,33 +259,14 @@ Publisher successfully added and replaced.
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
-
-Please enter your selection: 3
-
-PUBLISHERNAME                                                                                       PUBLISHERADDRESS                                                                                    PUBLISHERPHONE                                                                                      PUBLISHEREMAIL                                                                                      
-Twain Publishing                                                                                    1234 Rainbow Road, Mario City New Canada                                                            631-234-6521                                                                                        contact@marktwain.com                                                                               
-Do and Co.                                                                                          123 Canada Avenue Cooltown, New Mexico 12345                                                        949-123-4567                                                                                        kenny@doand.co                                                                                      
-The Slates Mates Publishing                                                                         1600 Pennsylvania Ave NW, Washington, DC 20500                                                      714-123-4567                                                                                        wesley@slatespublishing.com                                                                         
-Slates Publishing                                                                                   123 Address Street, City State 12345                                                                714-911-9111                                                                                        email@email.com                                                                                     
-
-
-1. List all writing groups.
-2. List all information from a specific writing group.
-3. List all publishers.
-4. List all information from a specific book.
-5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
 Please enter your selection: 5
 
@@ -246,21 +279,21 @@ CECS 323                                                                        
 CECS 323                                                                                            The Ethical Dilemma That Is Many to Many                                                            Slates Publishing                                                                                   2017                                                                                                143                                                                                                 
 CECS 323                                                                                            Why Wesley and Kenny should get an A. An introspective look.                                        The Slates Mates Publishing                                                                         2017                                                                                                503                                                                                                 
 CECS 323                                                                                            UML and Relation Schemes: A Love Story                                                              The Slates Mates Publishing                                                                         2017                                                                                                278                                                                                                 
-CECS 323                                                                                            How to Take Over The World Using Tactics Taught in CECS 323                                         The Slates Mates Publishing                                                                         2017                                                                                                243                                                                                                 
 
 
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
-Please enter your selection: 9
+Please enter your selection: 10
 Please enter the group name: 
 The Illiterate Writing Group
 Please enter the head writer: 
@@ -274,13 +307,14 @@ The Illiterate Writing Group added.
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
 Please enter your selection: 1
 
@@ -293,13 +327,14 @@ The Illiterate Writing Group                                                    
 1. List all writing groups.
 2. List all information from a specific writing group.
 3. List all publishers.
-4. List all information from a specific book.
+4. List all information from a specific publisher.
 5. List all books.
-6. Insert a Book.
-7. Remove a Book.
-8. Insert a new publisher and replace a current one.
-9. Insert a new group.
-10. Exit
+6. List all information from a specific book.
+7. Insert a Book.
+8. Remove a Book.
+9. Insert a new publisher and replace a current one.
+10. Insert a new group.
+11. Exit
 
-Please enter your selection: 10
-BUILD SUCCESSFUL (total time: 4 minutes 39 seconds)
+Please enter your selection: 11
+BUILD SUCCESSFUL (total time: 3 minutes 31 seconds)
